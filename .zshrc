@@ -66,6 +66,17 @@ zinit cdreplay -q
 bindkey '^p' history-search-backward
 bindkey '^n' history-search-forward
 
+# Mac specific bindings
+if [[ $(uname) == "Darwin" ]]; then
+  bindkey "\e[1;3D" backward-word     # ⌥←
+  bindkey "\e[1;3C" forward-word      # ⌥→
+  bindkey "^[[1;9D" beginning-of-line # cmd+←
+  bindkey "^[[1;9C" end-of-line       # cmd+→
+else
+  bindkey "^[[1;5C" forward-word
+  bindkey "^[[1;5D" backward-word
+fi
+
 
 # History
 HISTSIZE=5000
