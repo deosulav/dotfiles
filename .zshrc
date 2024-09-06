@@ -48,10 +48,14 @@ source "${ZINIT_HOME}/zinit.zsh"
 # Add Powerlevel 10k
 zinit ice depth=1; zinit light romkatv/powerlevel10k
 
+# Plugins setup
+export NVM_LAZY_LOAD=true
+
 # Plugins
 zinit light zsh-users/zsh-syntax-highlighting
 zinit light zsh-users/zsh-completions
 zinit light zsh-users/zsh-autosuggestions
+zinit light lukechilds/zsh-nvm
 zinit light Aloxaf/fzf-tab
 
 # load completions
