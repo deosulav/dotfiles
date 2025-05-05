@@ -147,3 +147,12 @@ function yy() {
 unset -f _check_and_install
 unset -f _version_less_than
 source ~/.zshenv
+
+ipadd() {
+  if command -v ip >/dev/null 2>&1; then
+    ip -4 addr show | grep -v 127.0.0.1 | grep "inet " | awk '{print $2}' | sed 's/\/.*//'
+  else
+    ifconfig | grep "inet " | grep -v "127.0.0.1" | awk '{print $2}' | sed 's/addr://'
+  fi
+}
+

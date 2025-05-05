@@ -1,12 +1,19 @@
 return {
-  -- the colorscheme 
+  -- the colorscheme
+  -- {
+  --   "folke/tokyonight.nvim",
+  --   lazy = false,
+  --   priority = 1000, -- make sure to load this before all the other start plugins
+  --   config = function()
+  --     vim.cmd([[colorscheme tokyonight]])
+  --   end,
+  -- },
   {
-    "folke/tokyonight.nvim",
-    lazy = false,
-    priority = 1000, -- make sure to load this before all the other start plugins
+    "Mofiqul/vscode.nvim",
     config = function()
-      vim.cmd([[colorscheme tokyonight]])
-    end,
+      local c = require('vscode.colors').get_colors()
+      require('vscode').setup()
+    end
   },
   {
     "folke/which-key.nvim",
@@ -38,32 +45,35 @@ return {
   {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
-    config = function ()
-    local configs = require("nvim-treesitter.configs")
+    config = function()
+      local configs = require("nvim-treesitter.configs")
 
-    require('nvim-ts-autotag').setup({
-      opts = {
-        enable_close = true,
-        enable_rename = true,
-        enable_close_on_slash = false
-      },
-      filetypes = { "html", "xml", "tsx", "jsx" },
-    })
-    configs.setup({
-        ensure_installed = { "c", "lua", "vim", "vimdoc", "query", "elixir", "heex", "javascript", "typescript", "tsx", "rust", "html" },
+      configs.setup({
+        ensure_installed = { "c", "lua", "vim", "vimdoc", "query", "elixir", "heex", "javascript", "typescript", "tsx", "rust", "html", "go" },
         sync_install = false,
         highlight = { enable = true },
-        autotag = { enable = true },
+        -- autotag = { enable = true },
         indent = { enable = true },
       })
     end
   },
   {
-    'nvim-telescope/telescope.nvim', tag = '0.1.8',
-      dependencies = { 'nvim-lua/plenary.nvim' }
+    'nvim-telescope/telescope.nvim',
+    tag = '0.1.8',
+    dependencies = { 'nvim-lua/plenary.nvim' }
   },
   {
     'windwp/nvim-ts-autotag',
+    config = function()
+      require('nvim-ts-autotag').setup({
+        opts = {
+          enable_close = true,
+          enable_rename = true,
+          enable_close_on_slash = false
+        },
+        filetypes = { "html", "xml", "tsx", "jsx" },
+      })
+    end
   },
   {
     "hrsh7th/nvim-cmp",
@@ -88,13 +98,13 @@ return {
           ['<CR>'] = cmp.mapping.confirm({ select = true }),
         }),
         snippet = {
-          expand = function (args)
+          expand = function(args)
             require('luasnip').lsp_expand(args.body)
           end,
         },
         sources = cmp.config.sources({
           { name = 'nvim_lsp' },
-          { name = 'luasnip'},
+          { name = 'luasnip' },
           { name = 'buffer' },
           { name = 'path' },
         }
@@ -106,8 +116,8 @@ return {
     'windwp/nvim-autopairs',
     config = function()
       require('nvim-autopairs').setup({
-        disable_filetype = { "TelescopePrompt", "vim" },  -- Disable in specific file types
-        check_ts = true,  -- Use treesitter for better pairing
+        disable_filetype = { "TelescopePrompt", "vim" }, -- Disable in specific file types
+        check_ts = true,                                 -- Use treesitter for better pairing
       })
 
       -- If using nvim-cmp, integrate it with autopairs for better completion
@@ -117,7 +127,13 @@ return {
     end
   },
   {
-    'jose-elias-alvarez/null-ls.nvim',
+    'kylechui/nvim-surround',
+    config = function()
+      require('nvim-surround').setup()
+    end
+  },
+  {
+    'nvimtools/none-ls.nvim',
     dependencies = { 'nvim-lua/plenary.nvim' }, -- Needed for null-ls
     config = function()
       local null_ls = require("null-ls")
@@ -132,7 +148,9 @@ return {
       })
     end
   },
-  { "nvim-neo-tree/neo-tree.nvim", lazy = true,
+  {
+    "nvim-neo-tree/neo-tree.nvim",
+    lazy = true,
     keys = {
       { "<leader>ft", "<cmd>Neotree toggle<cr>", desc = "NeoTree" },
     },
@@ -146,7 +164,35 @@ return {
     end,
   },
   { "nvim-tree/nvim-web-devicons", lazy = true },
-  { "stevearc/dressing.nvim", event = "VeryLazy" },
+  {
+    'numToStr/Comment.nvim',
+    opts = {
+    },
+    config = function()
+      require('Comment').setup();
+    end
+  },
+  {
+    'JoosepAlviste/nvim-ts-context-commentstring',
+    config = function()
+      require('ts_context_commentstring').setup({
+        enable_autocmd = false
+      })
+    end
+  },
+  {
+    "ibhagwan/fzf-lua",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    config = function()
+      require("fzf-lua").setup()
+    end
+  },
+  {
+    "lewis6991/gitsigns.nvim",
+    lazy = true,
+
+  },
+  { "stevearc/dressing.nvim",      event = "VeryLazy" },
   {
     "Wansmer/treesj",
     keys = {
@@ -155,8 +201,6 @@ return {
     opts = { use_default_keymaps = false, max_join_length = 150 },
   },
   -- local plugins
-  { dir = "~/projects/secret.nvim" },
   -- you can use a custom url to fetch a plugin
   { url = "git@github.com:folke/noice.nvim.git" },
-  { "folke/noice.nvim", dev = true },
 }
