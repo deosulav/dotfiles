@@ -17,10 +17,11 @@ return {
   },
   {
     "folke/which-key.nvim",
+    lazy  = true,
     event = "VeryLazy",
-    opts = {
+    opts  = {
     },
-    keys = {
+    keys  = {
       {
         "<leader>?",
         function()
@@ -32,38 +33,32 @@ return {
   },
   {
     "dstein64/vim-startuptime",
+    lazy = true,
+    event = "VeryLazy",
     cmd = "StartupTime",
     init = function()
       vim.g.startuptime_tries = 10
     end,
   },
   {
-    "williamboman/mason.nvim",
-    "williamboman/mason-lspconfig.nvim",
-    "neovim/nvim-lspconfig",
+    -- `lazydev` configures Lua LSP for your Neovim config, runtime and plugins
+    -- used for completion, annotations and signatures of Neovim apis
+    'folke/lazydev.nvim',
+    lazy = true,
+    event = "VeryLazy",
+    ft = 'lua',
+    opts = {
+      library = {
+        -- Load luvit types when the `vim.uv` word is found
+        { path = '${3rd}/luv/library', words = { 'vim%.uv' } },
+      },
+    },
   },
   {
-    "nvim-treesitter/nvim-treesitter",
-    build = ":TSUpdate",
-    config = function()
-      local configs = require("nvim-treesitter.configs")
-
-      configs.setup({
-        ensure_installed = { "c", "lua", "vim", "vimdoc", "query", "elixir", "heex", "javascript", "typescript", "tsx", "rust", "html", "go" },
-        sync_install = false,
-        highlight = { enable = true },
-        -- autotag = { enable = true },
-        indent = { enable = true },
-      })
-    end
-  },
-  {
-    'nvim-telescope/telescope.nvim',
-    tag = '0.1.8',
-    dependencies = { 'nvim-lua/plenary.nvim' }
-  },
-  {
+    -- Auto pairs JSX tags
     'windwp/nvim-ts-autotag',
+    lazy = true,
+    event = 'VeryLazy',
     config = function()
       require('nvim-ts-autotag').setup({
         opts = {
@@ -77,6 +72,7 @@ return {
   },
   {
     "hrsh7th/nvim-cmp",
+    lazy = true,
     event = "InsertEnter",
     dependencies = {
       "hrsh7th/cmp-nvim-lsp",
@@ -114,6 +110,8 @@ return {
   },
   {
     'windwp/nvim-autopairs',
+    lazy = true,
+    event = "VeryLazy",
     config = function()
       require('nvim-autopairs').setup({
         disable_filetype = { "TelescopePrompt", "vim" }, -- Disable in specific file types
@@ -128,73 +126,17 @@ return {
   },
   {
     'kylechui/nvim-surround',
+    lazy = true,
+    event = "VeryLazy",
     config = function()
       require('nvim-surround').setup()
     end
   },
-  {
-    'nvimtools/none-ls.nvim',
-    dependencies = { 'nvim-lua/plenary.nvim' }, -- Needed for null-ls
-    config = function()
-      local null_ls = require("null-ls")
-
-      -- Set up null-ls with Prettier as a formatter
-      null_ls.setup({
-        sources = {
-          null_ls.builtins.formatting.prettier.with({
-            filetypes = { "javascript", "typescript", "typescriptreact", "javascriptreact", "json", "html", "css", "markdown" }
-          }),
-        },
-      })
-    end
-  },
-  {
-    "nvim-neo-tree/neo-tree.nvim",
-    lazy = true,
-    keys = {
-      { "<leader>ft", "<cmd>Neotree toggle<cr>", desc = "NeoTree" },
-    },
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      "MunifTanjim/nui.nvim",
-      "3rd/image.nvim",
-    },
-    config = function()
-      require("neo-tree").setup()
-    end,
-  },
-  { "nvim-tree/nvim-web-devicons", lazy = true },
-  {
-    'numToStr/Comment.nvim',
-    opts = {
-    },
-    config = function()
-      require('Comment').setup();
-    end
-  },
-  {
-    'JoosepAlviste/nvim-ts-context-commentstring',
-    config = function()
-      require('ts_context_commentstring').setup({
-        enable_autocmd = false
-      })
-    end
-  },
-  {
-    "ibhagwan/fzf-lua",
-    dependencies = { "nvim-tree/nvim-web-devicons" },
-    config = function()
-      require("fzf-lua").setup()
-    end
-  },
-  {
-    "lewis6991/gitsigns.nvim",
-    lazy = true,
-
-  },
-  { "stevearc/dressing.nvim",      event = "VeryLazy" },
+  { "nvim-tree/nvim-web-devicons",              lazy = true, event = "VeryLazy" },
   {
     "Wansmer/treesj",
+    lazy = true,
+    event = "VeryLazy",
     keys = {
       { "J", "<cmd>TSJToggle<cr>", desc = "Join Toggle" },
     },
