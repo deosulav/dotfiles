@@ -27,6 +27,14 @@ end, { desc = "Insert shell command output at cursor" })
 if vim.g.vscode then
   local vscode = require('vscode')
 
+  vim.keymap.set("n", "gr", function() vscode.action("editor.action.referenceSearch.trigger") end)
+
+  vim.keymap.set("n", "]d", function() vscode.action("editor.action.marker.nextInFiles") end)
+  vim.keymap.set("n", "[d", function() vscode.action("editor.action.marker.prevInFiles") end)
+
+  vim.keymap.set("n", "]c", function() vscode.action("workbench.action.editor.nextChange") end)
+  vim.keymap.set("n", "[c", function() vscode.action("workbench.action.editor.previousChange") end)
+
   -- Fold / Unfold current block
   vim.keymap.set('n', 'za', function() vscode.call('editor.toggleFold') end, { desc = 'Toggle fold' })
   vim.keymap.set('n', 'zc', function() vscode.call('editor.fold') end, { desc = 'Close fold' })

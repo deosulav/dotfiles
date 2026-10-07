@@ -2,3 +2,4 @@
 lazy-lock.json
 .DS_Store
 **/tmux/*.log
+.config/tmux/plugins
