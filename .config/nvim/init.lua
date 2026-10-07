@@ -24,65 +24,48 @@ vim.keymap.set("n", "<leader>!", function()
 end, { desc = "Insert shell command output at cursor" })
 
 
-
-
-
 if vim.g.vscode then
-    local vscode = require('vscode')
+  local vscode = require('vscode')
 
-    vim.api.nvim_set_keymap('n', 'j', 'gj', { noremap = false, silent = true })
-    vim.api.nvim_set_keymap('n', 'k', 'gk', { noremap = false, silent = true })
+  -- Fold / Unfold current block
+  vim.keymap.set('n', 'za', function() vscode.call('editor.toggleFold') end, { desc = 'Toggle fold' })
+  vim.keymap.set('n', 'zc', function() vscode.call('editor.fold') end, { desc = 'Close fold' })
+  vim.keymap.set('n', 'zo', function() vscode.call('editor.unfold') end, { desc = 'Open fold' })
 
-    -- Fold / Unfold current block
-    vim.keymap.set('n', 'za', function() vscode.call('editor.toggleFold') end, { desc = 'Toggle fold' })
-    vim.keymap.set('n', 'zc', function() vscode.call('editor.fold') end, { desc = 'Close fold' })
-    vim.keymap.set('n', 'zo', function() vscode.call('editor.unfold') end, { desc = 'Open fold' })
+  -- Fold / Unfold recursively
+  vim.keymap.set('n', 'zC', function() vscode.call('editor.foldRecursively') end, { desc = 'Close fold recursively' })
+  vim.keymap.set('n', 'zO', function() vscode.call('editor.unfoldRecursively') end, { desc = 'Open fold recursively' })
 
-    -- Fold / Unfold recursively
-    vim.keymap.set('n', 'zC', function() vscode.call('editor.foldRecursively') end, { desc = 'Close fold recursively' })
-    vim.keymap.set('n', 'zO', function() vscode.call('editor.unfoldRecursively') end, { desc = 'Open fold recursively' })
+  -- Global fold management
+  vim.keymap.set('n', 'zM', function() vscode.call('editor.foldAll') end, { desc = 'Fold all' })
+  vim.keymap.set('n', 'zR', function() vscode.call('editor.unfoldAll') end, { desc = 'Unfold all' })
 
-    -- Global fold management
-    vim.keymap.set('n', 'zM', function() vscode.call('editor.foldAll') end, { desc = 'Fold all' })
-    vim.keymap.set('n', 'zR', function() vscode.call('editor.unfoldAll') end, { desc = 'Unfold all' })
+  -- Fold specific types
+  vim.keymap.set('n', 'zB', function() vscode.call('editor.foldAllBlockComments') end, { desc = 'Fold block comments' })
 
-    -- Fold specific types
-    vim.keymap.set('n', 'zB', function() vscode.call('editor.foldAllBlockComments') end, { desc = 'Fold block comments' })
-
-  -- -- Better up and down
-  -- Fix folds were automatically opening when navigating with j, k
-  vim.keymap.set("n", "j", function()
-    if vim.v.count == 0 then
-      vscode.call("cursorDown")
-    else
-      return "j"
+  local function smart_move(vscode_cmd, key)
+    return function()
+      if vim.v.count == 0 and vim.fn.reg_executing() == '' then
+        vscode.call(vscode_cmd)
+      else
+        return key
+      end
     end
-  end, { expr = true })
+  end
 
-  vim.keymap.set("n", "<Down>", function()
-    if vim.v.count == 0 then
-      vscode.call("cursorDown")
-    else
-      return "j"
-    end
-  end, { expr = true })
+  vim.keymap.set('n', 'j',      smart_move('cursorDown', 'j'), { expr = true })
+  vim.keymap.set('n', '<Down>', smart_move('cursorDown', 'j'), { expr = true })
+  vim.keymap.set('n', 'k',      smart_move('cursorUp', 'k'),   { expr = true })
+  vim.keymap.set('n', '<Up>',   smart_move('cursorUp', 'k'),   { expr = true })
 
-  vim.keymap.set("n", "k", function()
-    if vim.v.count == 0 then
-      vscode.call("cursorUp")
-    else
-      return "k"
-    end
-  end, { expr = true })
-
-  vim.keymap.set("n", "<Up>", function()
-    if vim.v.count == 0 then
-      vscode.call("cursorUp")
-    else
-      return "k"
-    end
-  end, { expr = true })
+   -- Visual mode (v, V, <C-v>): extend the selection
+  vim.keymap.set('x', 'j',      smart_move('cursorDownSelect', 'j'), { expr = true })
+  vim.keymap.set('x', '<Down>', smart_move('cursorDownSelect', 'j'), { expr = true })
+  vim.keymap.set('x', 'k',      smart_move('cursorUpSelect', 'k'),   { expr = true })
+  vim.keymap.set('x', '<Up>',   smart_move('cursorUpSelect', 'k'),   { expr = true })
 end
+
+
 
 
 
